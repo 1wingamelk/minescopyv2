@@ -74,10 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
     updateTrapsAmount(); // Инициализация при загрузке
   
-    // Получаем все ячейки. Важно: этот список ячеек будет актуален только при первой загрузке.
-    // Если cellsBoard.innerHTML перезаписывается, вам нужно будет получать их заново.
-    // В логике playButton я это учел, используя updatedCells.
-    const cells = Array.from(document.querySelectorAll('.cell'));
     const playButton = document.getElementById('playButton'); 
     const playsCounterElement = document.getElementById('playsCounter'); 
 
@@ -129,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function disablePlayButton() {
         if (playButton) {
             playButton.disabled = true;
-            playButton.textContent = 'Лимит исчерпан';
-            playButton.style.backgroundColor = '#6c757d'; // Пример изменения стиля для отключенной кнопки
+            playButton.querySelector('span').textContent = 'Лимит исчерпан'; // Изменено для span внутри кнопки
+            playButton.style.background = '#6c757d'; // Пример изменения стиля для отключенной кнопки
             playButton.style.cursor = 'not-allowed';
         }
     }
@@ -138,8 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function enablePlayButton() {
         if (playButton) {
             playButton.disabled = false;
-            playButton.textContent = 'Play';
-            playButton.style.backgroundColor = '#4CAF50'; // Возвращаем оригинальный цвет
+            playButton.querySelector('span').textContent = 'Play'; // Изменено для span внутри кнопки
+            playButton.style.background = 'linear-gradient(93.73deg, #108de7, #0855c4)'; // Возвращаем оригинальный цвет
             playButton.style.cursor = 'pointer';
         }
     }
@@ -208,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
               newImg.setAttribute('height', '40');
               newImg.style.opacity = '0';
               newImg.style.transform = 'scale(0)';
-              newImg.src = 'img/stars.svg'; // Путь к изображению звезды
+              newImg.src = 'output_svgs/stars.svg'; // ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ
               newImg.classList.add('star-animation');
               cell.appendChild(newImg);
               setTimeout(() => {
