@@ -6,20 +6,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     // Сохраняем начальное состояние cellsBoard, чтобы его можно было сбросить.
-    // Важно: если ячейки генерируются динамически после загрузки страницы,
-    // вам может потребоваться функция для их пересоздания, а не просто innerHTML.
     let originalCellsHtml = cellsBoard.innerHTML; 
   
-    const params = new URLSearchParams(window.location.search);
-    const botName = params.get('botName') || 'Unknown';
-    const language = params.get('language') || 'en';
-
-    const botNameElement = document.getElementById('botName');
-    if (botNameElement) {
-      botNameElement.textContent = botName;
-      botNameElement.style.display = 'block';
-      botNameElement.style.color = 'white';
-    }
+    // Эти строки закомментированы, так как мы убрали botName из HTML
+    // const params = new URLSearchParams(window.location.search);
+    // const botName = params.get('botName') || 'Unknown'; 
+    // const language = params.get('language') || 'en'; 
+    //
+    // const botNameElement = document.getElementById('botName');
+    // if (botNameElement) {
+    //   botNameElement.textContent = botName;
+    //   botNameElement.style.display = 'block';
+    //   botNameElement.style.color = 'white';
+    // }
   
     function hidePreloader() {
       const preloader = document.querySelector('.preloader');
@@ -45,12 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const trapsAmountElement = document.getElementById('trapsAmount');
     let currentTrapsIndex = 0;
   
-    // Обновление количества ловушек
     function updateTrapsAmount() {
       trapsAmountElement.textContent = trapsOptions[currentTrapsIndex];
     }
   
-    // Кнопки для переключения количества ловушек
     const prevPresetBtn = document.getElementById('prev_preset_btn');
     const nextPresetBtn = document.getElementById('next_preset_btn');
   
@@ -72,19 +69,18 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   
-    updateTrapsAmount(); // Инициализация при загрузке
+    updateTrapsAmount(); 
   
     const playButton = document.getElementById('playButton'); 
     const playsCounterElement = document.getElementById('playsCounter'); 
 
-    // --- Новая логика для ограничения игр ---
     const MAX_DAILY_PLAYS = 3;
-    const RESET_HOUR_MOSCOW = 8; // 8 AM Moscow time (UTC+3)
+    const RESET_HOUR_MOSCOW = 8; 
 
     function getMoscowTime() {
         const now = new Date();
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // Преобразовать в UTC
-        const moscowOffset = 3 * 3600000; // Москва = UTC+3 (для летнего времени может быть +4, но 8:00 МСК обычно стабильно)
+        const utc = now.getTime() + (now.getTimezonezoneOffset() * 60000); 
+        const moscowOffset = 3 * 3600000; 
         return new Date(utc + moscowOffset);
     }
 
@@ -95,11 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (lastPlayDateStr) {
             const lastPlayDate = new Date(lastPlayDateStr);
-            const lastPlayMoscow = new Date(lastPlayDate.getTime() + (lastPlayDate.getTimezoneOffset() * 60000) + (3 * 3600000)); // Преобразовать в Московское время
+            const lastPlayMoscow = new Date(lastPlayDate.getTime() + (lastPlayDate.getTimezoneOffset() * 60000) + (3 * 3600000)); 
 
-            // Проверяем, наступил ли новый день ИЛИ если это тот же день, но уже после часа сброса (8:00 МСК),
-            // и при этом последний сброс был до 8:00 МСК.
-            // Это условие обеспечивает, что сброс произойдет один раз после 8 утра, даже если пользователь не заходил.
             if (todayMoscow.getDate() !== lastPlayMoscow.getDate() || 
                 (todayMoscow.getDate() === lastPlayMoscow.getDate() && 
                  todayMoscow.getHours() >= RESET_HOUR_MOSCOW && 
@@ -110,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         
-        // Обновляем дату последней игры каждый раз, чтобы правильно отслеживать сброс
         localStorage.setItem('lastPlayDate', todayMoscow.toISOString());
         localStorage.setItem('playsToday', playsToday.toString());
         return playsToday;
@@ -125,8 +117,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function disablePlayButton() {
         if (playButton) {
             playButton.disabled = true;
-            playButton.querySelector('span').textContent = 'Лимит исчерпан'; // Изменено для span внутри кнопки
-            playButton.style.background = '#6c757d'; // Пример изменения стиля для отключенной кнопки
+            const playButtonSpan = playButton.querySelector('span');
+            if (playButtonSpan) {
+                playButtonSpan.textContent = 'Лимит исчерпан'; 
+            }
+            playButton.style.background = '#6c757d'; 
             playButton.style.cursor = 'not-allowed';
         }
     }
@@ -134,53 +129,50 @@ document.addEventListener('DOMContentLoaded', function () {
     function enablePlayButton() {
         if (playButton) {
             playButton.disabled = false;
-            playButton.querySelector('span').textContent = 'Play'; // Изменено для span внутри кнопки
-            playButton.style.background = 'linear-gradient(93.73deg, #108de7, #0855c4)'; // Возвращаем оригинальный цвет
+            const playButtonSpan = playButton.querySelector('span');
+            if (playButtonSpan) {
+                playButtonSpan.textContent = 'Play'; 
+            }
+            playButton.style.background = 'linear-gradient(93.73deg, #108de7, #0855c4)'; 
             playButton.style.cursor = 'pointer';
         }
     }
 
-    // Инициализация счетчика и состояния кнопки при загрузке страницы
     let currentPlays = checkAndResetPlays();
     updatePlaysCounter(currentPlays);
     if (currentPlays >= MAX_DAILY_PLAYS) {
         disablePlayButton();
     } else {
-        enablePlayButton(); // Убедимся, что кнопка включена, если лимит не исчерпан
+        enablePlayButton();
     }
-    // --- Конец новой логики ---
 
-    let isFirstPlay = true; // Отслеживаем первый запуск анимации (если это используется)
+    let isFirstPlay = true; 
 
     if (playButton) {
       playButton.addEventListener('click', () => {
-        currentPlays = checkAndResetPlays(); // Проверяем и обновляем количество игр перед каждой новой игрой
+        currentPlays = checkAndResetPlays(); 
         
         if (currentPlays >= MAX_DAILY_PLAYS) {
             disablePlayButton();
             alert('Вы достигли дневного лимита игр!'); 
-            return; // Прерываем выполнение, если лимит исчерпан
+            return; 
         }
 
         currentPlays++;
         localStorage.setItem('playsToday', currentPlays.toString());
-        localStorage.setItem('lastPlayDate', getMoscowTime().toISOString()); // Обновляем дату последней игры
+        localStorage.setItem('lastPlayDate', getMoscowTime().toISOString()); 
         updatePlaysCounter(currentPlays);
 
-        // Отключаем кнопку сразу после нажатия, пока идет игра/анимация
         disablePlayButton(); 
         
-        // Сброс состояния доски и ячеек перед новой игрой
         cellsBoard.innerHTML = originalCellsHtml; 
-        // !!! Важно: после перезаписи innerHTML, DOM-элементы ячеек становятся новыми объектами.
-        // Поэтому нужно заново получить ссылки на них.
         const updatedCells = Array.from(document.querySelectorAll('.cell'));
 
 
         const selectedTraps = trapsOptions[currentTrapsIndex];
         const cellsToOpen = trapsToCellsOpenMapping[selectedTraps];
   
-        const selectedCellsIndexes = []; // Используем индексы для выбора
+        const selectedCellsIndexes = []; 
   
         while (selectedCellsIndexes.length < cellsToOpen) {
           const randomIndex = Math.floor(Math.random() * updatedCells.length);
@@ -193,34 +185,33 @@ document.addEventListener('DOMContentLoaded', function () {
         function animateStars() {
           if (starIndex < selectedCellsIndexes.length) {
             const index = selectedCellsIndexes[starIndex];
-            const cell = updatedCells[index]; // Используем обновленные ссылки на ячейки
+            const cell = updatedCells[index]; 
   
             cell.classList.add('cell-fade-out');
   
              setTimeout(() => {
-              cell.innerHTML = ''; // Очищаем содержимое ячейки
+              cell.innerHTML = ''; 
               const newImg = document.createElement('img');
               newImg.setAttribute('width', '40');
               newImg.setAttribute('height', '40');
               newImg.style.opacity = '0';
               newImg.style.transform = 'scale(0)';
-              newImg.src = 'output_svgs/stars.svg'; // ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ
+              newImg.src = 'output_svgs/stars.svg'; // *** ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ ***
               newImg.classList.add('star-animation');
               cell.appendChild(newImg);
               setTimeout(() => {
                 newImg.classList.add('fade-in');
-              }, 50); // Небольшая задержка для запуска fade-in
+              }, 50); 
               cell.classList.remove('cell-fade-out');
-            }, 500); // Задержка перед началом анимации звезды (после cell-fade-out)
+            }, 500); 
   
             starIndex++;
-            setTimeout(animateStars, 650); // Задержка между анимациями звезд
+            setTimeout(animateStars, 650); 
           } else {
-            // После завершения анимации, проверяем, нужно ли снова включить кнопку "Play"
             if (currentPlays < MAX_DAILY_PLAYS) {
                 enablePlayButton();
             } else {
-                disablePlayButton(); // Если лимит достигнут, оставляем кнопку отключенной
+                disablePlayButton(); 
             }
 
             if (isFirstPlay) {
@@ -231,22 +222,5 @@ document.addEventListener('DOMContentLoaded', function () {
         animateStars();
       });
     }
-
-    // Обработчики для ячеек (если они нужны, так как в вашем коде они есть)
-    // Важно: если `cellsBoard.innerHTML = originalCellsHtml;` выполняется перед назначением
-    // обработчиков кликов для ячеек, то эти обработчики нужно переназначать
-    // для новых элементов после каждого сброса доски.
-    // В текущей логике animateStars уже используются обновленные ссылки `updatedCells`.
-    // Если вам нужна отдельная логика для клика по ячейке вне анимации Play:
-    /*
-    cellsBoard.addEventListener('click', (event) => {
-        const clickedCell = event.target.closest('.cell');
-        if (clickedCell) {
-            clickedCell.classList.add('clicked');
-            // Дополнительная логика для клика по ячейке, если необходимо
-            console.log('Клик по ячейке: ', clickedCell.id);
-        }
-    });
-    */
 
   });
