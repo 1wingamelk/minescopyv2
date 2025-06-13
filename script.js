@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
               newImg.setAttribute('height', '40');
               newImg.style.opacity = '0';
               newImg.style.transform = 'scale(0)';
-              newImg.src = 'stars.svg'; // *** ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ - теперь просто 'stars.svg' ***
+              newImg.src = 'img/stars.svg'; // *** ИСПРАВЛЕНО: ПУТЬ ТЕПЕРЬ 'img/stars.svg' ***
               newImg.classList.add('star-animation');
               cell.appendChild(newImg);
               setTimeout(() => {
