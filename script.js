@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getMoscowTime() {
         const now = new Date();
-        const utc = now.getTime() + (now.getTimezonezoneOffset() * 60000); 
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000); 
         const moscowOffset = 3 * 3600000; 
         return new Date(utc + moscowOffset);
     }
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
               newImg.setAttribute('height', '40');
               newImg.style.opacity = '0';
               newImg.style.transform = 'scale(0)';
-              newImg.src = 'output_svgs/stars.svg'; // *** ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ ***
+              newImg.src = 'stars.svg'; // *** ИСПРАВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ ЗВЕЗДЫ - теперь просто 'stars.svg' ***
               newImg.classList.add('star-animation');
               cell.appendChild(newImg);
               setTimeout(() => {
