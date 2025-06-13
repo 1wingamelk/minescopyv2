@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const trapsToCellsOpenMapping = {
       1: 10,
       3: 5,
-      5: 3,
-      7: 1
+      5: 4,
+      7: 3
     };
   
     const trapsAmountElement = document.getElementById('trapsAmount');
