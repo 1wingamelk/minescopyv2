@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
   
     const trapsOptions = [1, 3, 5, 7];
     const trapsToCellsOpenMapping = {
-      1: 10,
-      3: 5,
-      5: 4,
-      7: 3
+      1: 12,
+      3: 7,
+      5: 6,
+      7: 5
     };
   
     const trapsAmountElement = document.getElementById('trapsAmount');
